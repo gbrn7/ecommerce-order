@@ -44,3 +44,12 @@ func (l OrderItem) Validate() error {
 	v := validator.New()
 	return v.Struct(l)
 }
+
+type OrderStatusRequest struct {
+	Status string `json:"status" validation:"required"`
+}
+
+func (l OrderStatusRequest) Validate() error {
+	v := validator.New()
+	return v.Struct(l)
+}

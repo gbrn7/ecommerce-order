@@ -28,3 +28,23 @@ func (r *OrderRepo) InsertNewOrder(tx context.Context, order *models.Order) erro
 func (r *OrderRepo) UpdateStatusOrder(tx context.Context, orderID int, status string) error {
 	return r.DB.Exec("UPDATE orders SET status = ? WHERE id = ?", status, orderID).Error
 }
+
+func (r *OrderRepo) GetOrderDetail(tx context.Context, orderID int) (models.Order, error) {
+	var (
+		resp models.Order
+		err  error
+	)
+
+	err = r.DB.Preload("OrderItem").Where("id = ?", orderID).First(&resp).Error
+	return resp, err
+}
+
+func (r *OrderRepo) GetOrder(tx context.Context) ([]models.Order, error) {
+	var (
+		resp []models.Order
+		err  error
+	)
+
+	err = r.DB.Preload("OrderItem").Order("id DESC").Find(&resp).Error
+	return resp, err
+}

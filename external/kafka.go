@@ -11,13 +11,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (e External) ProductKafkaMessage(ctx context.Context, data []byte) error {
+func (e External) ProduceKafkaMessage(ctx context.Context, topic string, data []byte) error {
 	config := sarama.NewConfig()
 	config.Producer.Return.Successes = true
 	config.Producer.Timeout = 5 * time.Second
 
 	brokers := strings.Split(helpers.GetEnv("KAFKA_BROKERS", "localhost:29092,localhost:29093,localhost:29094"), ",")
-	topic := helpers.GetEnv("KAFKA_TOPIC_PAYMENT_INITIATE", "payment-initiation-topic")
 
 	producer, err := sarama.NewSyncProducer(brokers, config)
 	if err != nil {
